@@ -1,3 +1,4 @@
+<%@page import="java.util.Iterator"%>
 <%@page import="java.io.Console"%>
 <%@page import="learnbyteaching.emaillist.vo.EmailVo"%>
 <%@page import="java.util.List"%>
@@ -11,6 +12,7 @@ ServletContext context = getServletContext();
 String dbUser = context.getInitParameter("dbUser");
 String dbPass = context.getInitParameter("dbPass");
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +27,7 @@ String dbPass = context.getInitParameter("dbPass");
 <body>
     <div class="container">
         <h1 class="mt-5">메일링 리스트</h1>
- <%
+<%
 	EmailListDao dao = new EmailListDaoImpl(dbUser, dbPass);
 	List<EmailVo> list = dao.getList();
 	response.getWriter().println(list);
@@ -36,23 +38,30 @@ String dbPass = context.getInitParameter("dbPass");
         <table class="table table-bordered mt-3">
             <thead class="thead-light">
                 <tr>
-                    <th scope="col">성</th>
-                    <th scope="col">이름</th>
+                    <th scope="col">성/이름</th>
                     <th scope="col">이메일</th>
+                    <th scope="col">도구</th>
                 </tr>
             </thead>
             <tbody>
+            <% Iterator<EmailVo> it = list.iterator();
+            while (it.hasNext()) {
+            	EmailVo vo = it.next();
+            %>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><%= vo.getLastName() %><%= vo.getFirstName() %></td>
+                    <td><%= vo.getEmail() %></td>
+                    <td><a class="btn btn-danger" href="delete.jsp?no=<%= vo.getNo() %>">삭제</a></td>
                 </tr>
+               <%
+            }
+               %>
             </tbody>
         </table>
         <br />
 
         <p>
-            <a href="#" class="btn btn-primary">추가 이메일 등록</a>
+            <a href="form.jsp" class="btn btn-primary">추가 이메일 등록</a>
         </p>
     </div>
 
